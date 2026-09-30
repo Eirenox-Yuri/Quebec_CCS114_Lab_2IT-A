@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>User Info Card</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="banner">
+      <h1>User Info Card</h1>
+      <p>Fill in the form, then press “Show My Info” to build your card.</p>
+    </header>
+
+    <main class="layout">
+      <!-- ===== FORM ===== -->
+      <section class="panel">
+        <h2 class="form-title">Tell us about you</h2>
+        <p class="form-sub">Everything you type appears on your card.</p>
+        <div class="section">
+          <h3 class="section-title">Basic info</h3>
+          <div class="grid">
+            <div class="field">
+              <label for="fullName">Full name</label>
+              <input type="text" id="fullName" placeholder="Juan Dela Cruz" />
+            </div>
+            <div class="field">
+              <label for="age">Age</label>
+              <input
+                type="number"
+                id="age"
+                min="1"
+                max="120"
+                placeholder="20"
+              />
+            </div>
+            <div class="field">
+              <label for="birthdate">Birthdate</label>
+              <input type="date" id="birthdate" />
+            </div>
+            <div class="field">
+              <label for="city">City / Province</label>
+              <input type="text" id="city" placeholder="Legazpi, Albay" />
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3 class="section-title">Contact</h3>
+          <div class="grid">
+            <div class="field">
+              <label for="email">Email address</label>
+              <input type="email" id="email" placeholder="juan@example.com" />
+            </div>
+            <div class="field">
+              <label for="phone">Phone number</label>
+              <input type="tel" id="phone" placeholder="0912 345 6789" />
+            </div>
+            <div class="field full">
+              <label for="website">Website</label>
+              <input
+                type="url"
+                id="website"
+                placeholder="https://example.com"
+              />
+            </div>
+            <div class="field full">
+              <span class="legend">Preferred contact method</span>
+              <div class="options">
+                <label class="chip"
+                  ><input type="radio" name="contact" value="Email" /><span
+                    >Email</span
+                  ></label
+                >
+                <label class="chip"
+                  ><input type="radio" name="contact" value="Phone" /><span
+                    >Phone</span
+                  ></label
+                >
+                <label class="chip"
+                  ><input
+                    type="radio"
+                    name="contact"
+                    value="Text message"
+                  /><span>Text message</span></label
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3 class="section-title">About you</h3>
+          <div class="grid">
+            <div class="field full">
+              <label for="color">Favorite color</label>
+              <select id="color">
+                <option value="">-- Choose a color --</option>
+                <option value="Blue">Blue</option>
+                <option value="Red">Red</option>
+                <option value="Green">Green</option>
+                <option value="Purple">Purple</option>
+                <option value="Orange">Orange</option>
+                <option value="Pink">Pink</option>
+                <option value="Teal">Teal</option>
+              </select>
+            </div>
+            <div class="field full">
+              <span class="legend">Hobbies</span>
+              <div class="options">
+                <label class="chip"
+                  ><input type="checkbox" class="hobby" value="Gaming" /><span
+                    >Gaming</span
+                  ></label
+                >
+                <label class="chip"
+                  ><input type="checkbox" class="hobby" value="Reading" /><span
+                    >Reading</span
+                  ></label
+                >
+                <label class="chip"
+                  ><input type="checkbox" class="hobby" value="Music" /><span
+                    >Music</span
+                  ></label
+                >
+                <label class="chip"
+                  ><input type="checkbox" class="hobby" value="Sports" /><span
+                    >Sports</span
+                  ></label
+                >
+                <label class="chip"
+                  ><input type="checkbox" class="hobby" value="Cooking" /><span
+                    >Cooking</span
+                  ></label
+                >
+                <label class="chip"
+                  ><input
+                    type="checkbox"
+                    class="hobby"
+                    value="Traveling"
+                  /><span>Traveling</span></label
+                >
+              </div>
+            </div>
+            <div class="field full">
+              <label for="skill"
+                >Coding confidence: <span id="skillValue">5</span> / 10</label
+              >
+              <input type="range" id="skill" min="1" max="10" value="5" />
+            </div>
+            <div class="field full">
+              <label for="bio">Short bio</label>
+              <textarea
+                id="bio"
+                placeholder="Tell us a little about yourself..."
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <p class="error" id="error"></p>
+        <div class="actions">
+          <button type="button" id="showBtn">Show My Info</button>
+          <button type="button" id="resetBtn">Clear</button>
+        </div>
+      </section>
+
+      <!-- ===== OUTPUT CARD ===== -->
+      <section class="panel card" id="card">
+        <div class="card-head">
+          <div class="avatar" id="avatar">?</div>
+          <div>
+            <h3 id="cardName">Your name here</h3>
+            <p id="cardEmail">Your email here</p>
+          </div>
+        </div>
+        <p class="placeholder" id="placeholder">
+          Nothing to show yet. Fill in the form and press “Show My Info”.
+        </p>
+        <div id="output"></div>
+      </section>
+    </main>
+
+    <script>
+      // Color names -> bright hex values (the default theme is orange)
+      var colorMap = {
+        Blue: "#4c8dff",
+        Red: "#ff5252",
+        Green: "#3ddc84",
+        Purple: "#a56bff",
+        Orange: "#ff7a1a",
+        Pink: "#ff5fb0",
+        Teal: "#22d3c5",
+      };
+
+      // ---- Live slider label (getElementById) ----
+      document.getElementById("skill").addEventListener("input", function () {
+        document.getElementById("skillValue").textContent = this.value;
+      });
+
+      // ---- Read every field and build the card ----
+      function showInfo() {
+        // getElementById: text-like inputs
+        var fullName = document.getElementById("fullName").value.trim();
+        var email = document.getElementById("email").value.trim();
+        var age = document.getElementById("age").value;
+        var birthdate = document.getElementById("birthdate").value;
+        var phone = document.getElementById("phone").value.trim();
+        var city = document.getElementById("city").value.trim();
+        var website = document.getElementById("website").value.trim();
+        var color = document.getElementById("color").value;
+        var skill = document.getElementById("skill").value;
+        var bio = document.getElementById("bio").value.trim();
+
+        // querySelector: the selected radio button
+        var chosen = document.querySelector('input[name="contact"]:checked');
+        var contact = chosen ? chosen.value : "";
+
+        // querySelectorAll: every checked hobby checkbox
+        var hobbies = [];
+        document.querySelectorAll(".hobby:checked").forEach(function (box) {
+          hobbies.push(box.value);
+        });
+
+        // Basic validation
+        var errorBox = document.getElementById("error");
+        if (fullName === "") {
+          errorBox.textContent =
+            "Please enter your full name before showing your info.";
+          document.getElementById("fullName").focus();
+          return;
+        }
+        errorBox.textContent = "";
+
+        // Header of the card
+        document.getElementById("cardName").textContent = fullName;
+        document.getElementById("cardEmail").textContent =
+          email || "No email provided";
+
+        // Avatar initials from the first and last word of the name
+        var parts = fullName.split(/\s+/);
+        var initials = parts[0].charAt(0);
+        if (parts.length > 1) initials += parts[parts.length - 1].charAt(0);
+        document.getElementById("avatar").textContent = initials.toUpperCase();
+
+        // Change the accent color (style change through JS)
+        if (colorMap[color]) {
+          document.documentElement.style.setProperty(
+            "--accent",
+            colorMap[color],
+          );
+        }
+
+        // Rows to display
+        var rows = [
+          ["Full name", fullName],
+          ["Email", email],
+          ["Age", age],
+          ["Birthdate", birthdate],
+          ["Phone", phone],
+          ["City / Province", city],
+          ["Website", website],
+          ["Favorite color", color],
+          ["Preferred contact", contact],
+          ["Hobbies", hobbies.join(", ")],
+          ["Coding confidence", skill + " / 10"],
+          ["Bio", bio],
+        ];
+
+        var output = document.getElementById("output");
+        output.innerHTML = "";
+        rows.forEach(function (item) {
+          var row = document.createElement("div");
+          row.className = "row";
+
+          var key = document.createElement("span");
+          key.className = "key";
+          key.textContent = item[0];
+
+          var val = document.createElement("span");
+          val.className = "val";
+          val.textContent = item[1] === "" ? "Not provided" : item[1];
+
+          row.appendChild(key);
+          row.appendChild(val);
+          output.appendChild(row);
+        });
+
+        document.getElementById("placeholder").style.display = "none";
+      }
+
+      // ---- Clear the form and card ----
+      function clearAll() {
+        // getElementsByTagName: reset every input, select and textarea
+        var tags = ["input", "select", "textarea"];
+        tags.forEach(function (tag) {
+          var list = document.getElementsByTagName(tag);
+          for (var i = 0; i < list.length; i++) {
+            var el = list[i];
+            if (el.type === "checkbox" || el.type === "radio")
+              el.checked = false;
+            else if (el.type === "range") el.value = 5;
+            else el.value = "";
+          }
+        });
+
+        // getElementsByClassName: uncheck hobbies
+        var hobbyBoxes = document.getElementsByClassName("hobby");
+        for (var j = 0; j < hobbyBoxes.length; j++)
+          hobbyBoxes[j].checked = false;
+
+        document.getElementById("skillValue").textContent = "5";
+        document.getElementById("error").textContent = "";
+        document.getElementById("output").innerHTML = "";
+        document.getElementById("placeholder").style.display = "block";
+        document.getElementById("avatar").textContent = "?";
+        document.getElementById("cardName").textContent = "Your name here";
+        document.getElementById("cardEmail").textContent = "Your email here";
+        document.documentElement.style.setProperty("--accent", "#ff7a1a");
+      }
+
+      document.getElementById("showBtn").addEventListener("click", showInfo);
+      document.getElementById("resetBtn").addEventListener("click", clearAll);
+    </script>
+  </body>
+</html>
